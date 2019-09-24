@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StickyBall: MonoBehaviour {
 
@@ -29,6 +31,14 @@ public class StickyBall: MonoBehaviour {
   public GameObject group3;
   bool group3Unlocked = false;
 
+  public GameObject group4;
+  bool group4Unlocked = false; 
+
+  // Pickup Sound Reference
+  public AudioClip pickupSound;
+
+  public GameObject sizeUI;
+
   // Start is called before the first frame update
   void Start() {
 
@@ -49,10 +59,10 @@ public class StickyBall: MonoBehaviour {
 
   private void FixedUpdate() {
 
-    // Apply force behidn the ball 
+    // Apply force behind the ball
     this.transform.GetComponent < Rigidbody > ().AddForce(new Vector3(unitv2.x, 0, unitv2.y) * z * 3);
 
-    // Set Camera Position Behidn the Ball based on rotation 
+    // Set Camera Position Behidn the Ball based on rotation
     cameraReference.transform.position = new Vector3(-unitv2.x * distanceToCamera, distanceToCamera, -unitv2.y * distanceToCamera) + this.transform.position;
 
     unlockPickupGroups();
@@ -92,10 +102,24 @@ public class StickyBall: MonoBehaviour {
         }
       }
 
+    } else if (group4Unlocked == false){
+
+      if (size >= 3.8f) {
+        group4Unlocked = true;
+        for (int i = 0; i < group4.transform.childCount; i++) {
+          group4.transform.GetChild(i).GetComponent < Collider > ().isTrigger = true;
+        // Change distance between camera and ball
+        distanceToCamera = 6.6f;
+        }
+      }
+
+
     }
   }
     
   // Pick up Sticky Objects
+  // OnTriggerEnter is a commonly used unity function that gets called when an object collides with a trigger
+  // Collider refers to the sticky ball (player)
   private void OnTriggerEnter(Collider other) {
     if (other.transform.CompareTag("Sticky")) {
       if (0 < size) {
@@ -109,6 +133,12 @@ public class StickyBall: MonoBehaviour {
 
         // Becomes Child so it stays with the ball
         other.transform.SetParent(this.transform);
+
+        // Create text in the public GameObject sizeUI. Math.Round rounds off the sticky ball size to one decimals
+        sizeUI.GetComponent<Text>().text = "Mass: " + Math.Round(size, 2).ToString();
+
+        // Sound effect when we Pick up a Sticky Object
+        this.GetComponent<AudioSource>().PlayOneShot(pickupSound);
 
         // Print to Console, works like println () in Processing or print() in p5
         Debug.Log(size);

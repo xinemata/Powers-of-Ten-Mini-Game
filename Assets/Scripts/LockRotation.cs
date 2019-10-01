@@ -4,23 +4,13 @@ using UnityEngine;
 
 public class LockRotation : MonoBehaviour
 {
-Quaternion rotation; 
-Vector3 position;
-
-public int height = 3;
- 
+Quaternion rotation;
 void Awake(){
     rotation = transform.rotation;
-
-    position.y = height;
-
-
 }
 void LateUpdate()
 {
      transform.rotation = rotation; 
-     
-     position.y = height;
 }
 }
  

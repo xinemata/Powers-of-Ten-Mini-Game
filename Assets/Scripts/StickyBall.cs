@@ -130,10 +130,6 @@ public class StickyBall: MonoBehaviour {
 
         // Disable so that the objects will only stick to your sphere
         other.enabled = false;
-
-        // Becomes Child so it stays with the ball
-        other.transform.SetParent(this.transform);
-
         // Create text in the public GameObject sizeUI. Math.Round rounds off the sticky ball size to one decimals
         sizeUI.GetComponent<Text>().text = "Mass: " + Math.Round(size, 2).ToString();
 
@@ -144,6 +140,9 @@ public class StickyBall: MonoBehaviour {
         Debug.Log(size);
           
       }
+        // Becomes Child so it stays with the ball
+        other.transform.SetParent(this.transform);
+
     }
   }
 }
